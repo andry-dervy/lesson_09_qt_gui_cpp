@@ -49,6 +49,7 @@ private:
     QAction* changeReadableWritable;
 
     QMap<QString,CreatorDocumentView*> mapCreators;
+    QString fileNameOrganizer;
 
 private:
     void acceptLanguage(std::shared_ptr<LanguageVisitor>&& lv);
@@ -60,6 +61,9 @@ private:
     void setMenuHelp();
     void setMenu();
     void setToolBar();
+
+    void loadSettings();
+    void saveSettings();
 
     void retranslateMenuFile();
     void retranslateMenuView();
@@ -95,9 +99,12 @@ private slots:
     void openFile();
     void openFileReadableOnly();
     void openFilePathFromFileSystemModel(QString& fileName);
+    void openFileOrganizerDefault();
+    void setCurrentFileOrganizerAsDefault();
 
     void saveFile();
     void saveFileAs();
+    void saveFileAll();
 
     void printFile();
 

@@ -25,8 +25,6 @@ enum class ReadableWritable
     WRITABLE,
 };
 
-class CreatorDocumentView;
-
 class DocumentView : public QWidget
 {
     Q_OBJECT
@@ -38,7 +36,6 @@ public:
     virtual void print(QPrinter* printer) const = 0;
     virtual bool isTypeDoc(TypeDocumentView type) const = 0;
     virtual QString getExtention() const = 0;
-//    virtual std::unique_ptr<CreatorDocumentView> getCreator() const = 0;
 protected:
     virtual bool eventFilter(QObject *obj, QEvent *event) = 0;
 

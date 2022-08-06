@@ -7,8 +7,6 @@ Rectangle {
     objectName: "rootrect"
     color: "gainsboro"
 
-    //anchors.margins: 50
-
     property alias width_: _rootrect.width
     property alias height_: _rootrect.height
 
@@ -19,8 +17,6 @@ Rectangle {
         anchors.right: _rootrect.right
         spacing: 5
 
-
-
         QmlButton {
             id: _addTask
             text: qsTr("Добавить задачу")
@@ -30,7 +26,6 @@ Rectangle {
             Layout.margins: 10
 
             onClicked: {
-                //_listModel.append({})
                 model_tasks.add();
                 console.log(_addTask.text + " MouseAreaClicked");
             }
@@ -61,12 +56,107 @@ Rectangle {
         anchors.bottom: _rootrect.bottom
         anchors.margins: 5
 
+        headerPositioning: ListView.PullBackHeader
+
         clip: true
 
         highlight: Rectangle {
             color: "skyblue"
         }
         highlightFollowsCurrentItem: true
+
+        header: Item {
+            id: _header
+            width: _view.width
+            height: 40
+            anchors.margins: 20
+
+            Row {
+                Rectangle {
+                    id: _hdr_nameTask
+                    color: "lightcyan"
+                    width: (_header.width - 10) * 0.25
+                    height: _header.height
+
+                    Text {
+                        id: _hdr_txtNameTask
+                        x: 5; y: 5
+                        width: _hdr_nameTask.width - 10
+                        height: _hdr_nameTask.height - 10
+
+                        text: qsTr("Название задачи")
+
+                        font.pointSize: _hdr_nameTask.height <= 5 ? 1 : _hdr_nameTask.height / 5
+                        font.bold: true
+                        horizontalAlignment: TextEdit.AlignHCenter
+                        verticalAlignment: TextEdit.AlignVCenter
+                    }
+                }
+                Rectangle {
+                    id: _hdr_task
+                    color: "lightgoldenrodyellow"
+                    width: (_header.width - 10) * 0.50
+                    height: _header.height
+
+                    Text {
+                        id: _hdr_txtTask
+                        x: 5; y: 5
+                        width: _hdr_task.width - 10
+                        height: _hdr_task.height - 10
+
+                        font.pointSize: _hdr_txtNameTask.font.pointSize
+                        font.bold: true
+
+                        text: qsTr("Описание задачи")
+
+                        horizontalAlignment: TextEdit.AlignHCenter
+                        verticalAlignment: TextEdit.AlignVCenter
+                    }
+                }
+                Rectangle {
+                    id: _hdr_perform
+                    color: "lightcyan"
+                    width: (_header.width - 10) * 0.10
+                    height: _header.height
+
+                    Text {
+                        id: _hdr_txtPerform
+                        x: 5; y: 5
+                        width: _hdr_perform.width - 10
+                        height: _hdr_perform.height - 10
+
+                        font.pointSize: _hdr_txtNameTask.font.pointSize
+                        font.bold: true
+
+                        text: qsTr("Прогресс")
+
+                        horizontalAlignment: TextEdit.AlignHCenter
+                        verticalAlignment: TextEdit.AlignVCenter
+                    }
+                }
+                Rectangle {
+                    id: _hdr_limitDate
+                    color: "lightgoldenrodyellow"
+                    width: (_header.width - 10) * 0.15
+                    height: _header.height
+
+                    Text {
+                        id: _hdr_txtDate
+                        x: 5; y: 5
+                        width: _hdr_limitDate.width - 10
+                        height: _hdr_limitDate.height - 10
+
+                        font.pointSize: _hdr_txtNameTask.font.pointSize
+                        font.bold: true
+
+                        text: qsTr("Срок выполнения")
+
+                        horizontalAlignment: TextEdit.AlignHCenter
+                        verticalAlignment: TextEdit.AlignVCenter
+                    }
+                }
+            }
+        }
 
         delegate: Item {
             id: _listItem
@@ -87,7 +177,7 @@ Rectangle {
             }
         }
 
-        spacing: 10
+        spacing: 5
 
         model: model_tasks
     }

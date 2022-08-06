@@ -20,9 +20,7 @@ public:
     void setProgress(int aProgress){
         progress = aProgress > 10 || aProgress < 0 ? 0: aProgress;}
     void setLimitDate(QDate& aLimitDate) {
-        limitDate = aLimitDate < QDate::currentDate() ?
-                    QDate::currentDate() :
-                    aLimitDate;}
+        limitDate = aLimitDate;}
 
     QString getName(){return name;}
     QString getDescription(){return description;}
@@ -85,7 +83,7 @@ public:
     void print(QPrinter* printer) const override;
     bool isTypeDoc(TypeDocumentView type) const override;
     QString getExtention() const override {return extention();}
-    static QString extention() {return ".xmlorg";}
+    static QString extention() {return "xmlorg";}
 private:
     OrganizerDocumentView& operator=(const OrganizerDocumentView&) = delete;
     OrganizerDocumentView(OrganizerDocumentView&& root) = delete;

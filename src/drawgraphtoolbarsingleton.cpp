@@ -2,10 +2,10 @@
 #include "inc/toolbarelementsfactory.h"
 #include "QDebug"
 
-extern template std::optional<QAction *> ToolbarElementsFactory<QAction>::create(const QString &&nameObject, QWidget *parent, bool checkable, const QPixmap &&icon);
-extern template void ToolbarElementsFactory<QAction>::setText(QObject* parent,const QString&& nameObject,const QString&& text);
-extern template std::optional<QComboBox *> ToolbarElementsFactory<QComboBox>::create(const QString &&nameObject, QWidget *parent, bool checkable, const QPixmap &&icon);
-extern template void ToolbarElementsFactory<QComboBox>::setText(QObject* parent,const QString&& nameObject,const QString&& text);
+extern template std::optional<QAction *> WidgetsFactory<QAction>::create(const QString &&nameObject, QWidget *parent, bool checkable, const QPixmap &&icon);
+extern template void WidgetsFactory<QAction>::setText(QObject* parent,const QString&& nameObject,const QString&& text);
+extern template std::optional<QComboBox *> WidgetsFactory<QComboBox>::create(const QString &&nameObject, QWidget *parent, bool checkable, const QPixmap &&icon);
+extern template void WidgetsFactory<QComboBox>::setText(QObject* parent,const QString&& nameObject,const QString&& text);
 
 DrawGraphToolBarSingleton* DrawGraphToolBarSingleton::getInstance(MainWindow* parent)
 {
@@ -16,36 +16,36 @@ DrawGraphToolBarSingleton* DrawGraphToolBarSingleton::getInstance(MainWindow* pa
 
 void DrawGraphToolBarSingleton::retranslate()
 {
-    ToolbarElementsFactory<QAction>::setText(this,"actDrawElipse",tr("Элипс"));
-    ToolbarElementsFactory<QAction>::setText(this,"actDrawRectangle",tr("Прямоугольник"));
-    ToolbarElementsFactory<QAction>::setText(this,"actDrawStar",tr("Звезда"));
-    ToolbarElementsFactory<QComboBox>::setText(this,"cbWidthPen",tr("Толщина пера"));
-    ToolbarElementsFactory<QAction>::setText(this,"actColorGraphItemBorder",tr("Цвет границы элемента"));
-    ToolbarElementsFactory<QAction>::setText(this,"actColorGraphItem",tr("Цвет элемента"));
+    WidgetsFactory<QAction>::setText(this,"actDrawElipse",tr("Элипс"));
+    WidgetsFactory<QAction>::setText(this,"actDrawRectangle",tr("Прямоугольник"));
+    WidgetsFactory<QAction>::setText(this,"actDrawStar",tr("Звезда"));
+    WidgetsFactory<QComboBox>::setText(this,"cbWidthPen",tr("Толщина пера"));
+    WidgetsFactory<QAction>::setText(this,"actColorGraphItemBorder",tr("Цвет границы элемента"));
+    WidgetsFactory<QAction>::setText(this,"actColorGraphItem",tr("Цвет элемента"));
 }
 
 DrawGraphToolBarSingleton::DrawGraphToolBarSingleton(MainWindow *parent)
     : QToolBar(parent)
 {
-    auto act = ToolbarElementsFactory<QAction>::create(
+    auto act = WidgetsFactory<QAction>::create(
                 "actDrawElipse", this,true,QPixmap(":/icons/graphics/elipse.png"));
     Q_ASSERT(act != nullptr);
     connect(*act,SIGNAL(triggered()),this,SLOT(setDrawingElipse()));
     addAction(*act);
 
-    act = ToolbarElementsFactory<QAction>::create(
+    act = WidgetsFactory<QAction>::create(
                     "actDrawRectangle",this,true,QPixmap(":/icons/graphics/rectangle.png"));
     Q_ASSERT(act != nullptr);
     connect(*act,SIGNAL(triggered()),this,SLOT(setDrawingRectangle()));
     addAction(*act);
 
-    act = ToolbarElementsFactory<QAction>::create(
+    act = WidgetsFactory<QAction>::create(
                     "actDrawStar",this,true,QPixmap(":/icons/graphics/star.png"));
     Q_ASSERT(act != nullptr);
     connect(*act,SIGNAL(triggered()),this,SLOT(setDrawingStar()));
     addAction(*act);
 
-    auto combo = ToolbarElementsFactory<QComboBox>::create(
+    auto combo = WidgetsFactory<QComboBox>::create(
                     "cbWidthPen",this,false,QPixmap());
     Q_ASSERT(combo != nullptr);
 
@@ -56,13 +56,13 @@ DrawGraphToolBarSingleton::DrawGraphToolBarSingleton(MainWindow *parent)
         this,&DrawGraphToolBarSingleton::setWidthPen);
     addWidget(*combo);
 
-    act = ToolbarElementsFactory<QAction>::create(
+    act = WidgetsFactory<QAction>::create(
                     "actColorGraphItemBorder",this,false,QPixmap(":/icons/graphics/colorgraphitemborder.png"));
     Q_ASSERT(act != nullptr);
     connect(*act,SIGNAL(triggered()),this,SLOT(setColorBorder()));
     addAction(*act);
 
-    act = ToolbarElementsFactory<QAction>::create(
+    act = WidgetsFactory<QAction>::create(
                     "actColorGraphItem",this,false,QPixmap(":/icons/graphics/colorgraphitem.png"));
     Q_ASSERT(act != nullptr);
     connect(*act,SIGNAL(triggered()),this,SLOT(setColor()));
@@ -86,7 +86,7 @@ void DrawGraphToolBarSingleton::setDrawingElement(QString&& objName, GraphDocume
     auto graphDocView = getCurrentGraphDocView();
     if(!graphDocView) return;
 
-    if(ToolbarElementsFactory<QAction>::isChecked(this,std::move(objName)))
+    if(WidgetsFactory<QAction>::isChecked(this,std::move(objName)))
     {
         (*graphDocView)->setTypeGraphElement(typeGraphElement);
         setActionsChecked(typeGraphElement);
@@ -101,19 +101,19 @@ void DrawGraphToolBarSingleton::setActionsChecked(GraphDocumentView::TypeGraphEl
 {
     qDebug() << "setActionsChecked(" << typeGraphElement <<")";
 
-    ToolbarElementsFactory<QAction>::setChecked(this,"actDrawElipse",false);
-    ToolbarElementsFactory<QAction>::setChecked(this,"actDrawRectangle",false);
-    ToolbarElementsFactory<QAction>::setChecked(this,"actDrawStar",false);
+    WidgetsFactory<QAction>::setChecked(this,"actDrawElipse",false);
+    WidgetsFactory<QAction>::setChecked(this,"actDrawRectangle",false);
+    WidgetsFactory<QAction>::setChecked(this,"actDrawStar",false);
 
     switch (typeGraphElement) {
     case GraphDocumentView::TypeGraphElement::Ellipse:
-        ToolbarElementsFactory<QAction>::setChecked(this,"actDrawElipse",true);
+        WidgetsFactory<QAction>::setChecked(this,"actDrawElipse",true);
         break;
     case GraphDocumentView::TypeGraphElement::Rectangle:
-        ToolbarElementsFactory<QAction>::setChecked(this,"actDrawRectangle",true);
+        WidgetsFactory<QAction>::setChecked(this,"actDrawRectangle",true);
         break;
     case GraphDocumentView::TypeGraphElement::Star:
-        ToolbarElementsFactory<QAction>::setChecked(this,"actDrawStar",true);
+        WidgetsFactory<QAction>::setChecked(this,"actDrawStar",true);
         break;
     case GraphDocumentView::TypeGraphElement::Empty:
         break;

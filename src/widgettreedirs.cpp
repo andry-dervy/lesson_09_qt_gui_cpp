@@ -9,8 +9,8 @@
 #include <QListView>
 #include <QSplitter>
 
-extern template std::optional<QPushButton *> ToolbarElementsFactory<QPushButton>::create(const QString &&nameObject, QWidget *parent, bool checkable, const QPixmap &&icon);
-extern template void ToolbarElementsFactory<QPushButton>::setText(QObject* parent,const QString&& nameObject,const QString&& text);
+extern template std::optional<QPushButton *> WidgetsFactory<QPushButton>::create(const QString &&nameObject, QWidget *parent, bool checkable, const QPixmap &&icon);
+extern template void WidgetsFactory<QPushButton>::setText(QObject* parent,const QString&& nameObject,const QString&& text);
 
 WidgetTreeDirsSingleton::WidgetTreeDirsSingleton(QWidget *parent)
     : QWidget(parent)
@@ -39,7 +39,7 @@ WidgetTreeDirsSingleton::WidgetTreeDirsSingleton(QWidget *parent)
     leFindPhrase = new QLineEdit(this);
     hBoxLayout->addWidget(leFindPhrase);
 
-    auto pbFind = ToolbarElementsFactory<QPushButton>::create("pbFind",this,false,QPixmap());
+    auto pbFind = WidgetsFactory<QPushButton>::create("pbFind",this,false,QPixmap());
     Q_ASSERT(pbFind != nullptr);
     connect(*pbFind,&QPushButton::clicked,this,&WidgetTreeDirsSingleton::pbFindClicked);
     hBoxLayout->addWidget(*pbFind);
@@ -80,7 +80,7 @@ void WidgetTreeDirsSingleton::retranslate()
 {
     if(modelFileSystem != nullptr) modelFileSystem->retranslate();
 
-    ToolbarElementsFactory<QPushButton>::setText(this,"pbFind",tr("Поиск"));
+    WidgetsFactory<QPushButton>::setText(this,"pbFind",tr("Поиск"));
 }
 
 bool WidgetTreeDirsSingleton::eventFilter(QObject* obj, QEvent* event)
@@ -110,7 +110,7 @@ void WidgetTreeDirsSingleton::pbFindClicked()
     {
         finder->stopSearching();
         finder = nullptr;
-        ToolbarElementsFactory<QPushButton>::setText(this,"pbFind",tr("Поиск"));
+        WidgetsFactory<QPushButton>::setText(this,"pbFind",tr("Поиск"));
         isSearching = false;
         return;
     }
@@ -134,7 +134,7 @@ void WidgetTreeDirsSingleton::pbFindClicked()
         connect(thread, &QThread::finished, thread, &QThread::deleteLater);
         connect(finder, &Finder::sendMatched, this, &WidgetTreeDirsSingleton::receiveMatched);
 
-        ToolbarElementsFactory<QPushButton>::setText(this,"pbFind",tr("Стоп"));
+        WidgetsFactory<QPushButton>::setText(this,"pbFind",tr("Стоп"));
         isSearching = true;
 
         thread->start();
@@ -150,7 +150,7 @@ void WidgetTreeDirsSingleton::receiveMatched(QString path)
 
 void WidgetTreeDirsSingleton::finishedFind()
 {
-    ToolbarElementsFactory<QPushButton>::setText(this,"pbFind",tr("Поиск"));
+    WidgetsFactory<QPushButton>::setText(this,"pbFind",tr("Поиск"));
     isSearching = false;
 }
 
@@ -204,9 +204,8 @@ Finder::Finder(QDir aDir, QString aFindText)
 
 void Finder::stopSearching()
 {
-    mtxIsSearching.lock();
+    QMutexLocker locker(&mtxIsSearching);
     isSearching = false;
-    mtxIsSearching.unlock();
 }
 
 void Finder::find()
@@ -215,7 +214,8 @@ void Finder::find()
     while(isSearching && it.hasNext())
     {
         emit sendMatched(it.next());
-        QThread::msleep(1);
+        //QThread::msleep(1);
+        QThread::yieldCurrentThread();
     }
     emit finished();
 }
