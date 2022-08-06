@@ -1,7 +1,7 @@
 #include "inc/toolbarelementsfactory.h"
 
 template<class T>
-std::optional<T *> ToolbarElementsFactory<T>::create(const QString &&nameObject, QWidget *parent, bool checkable, const QPixmap &&icon)
+std::optional<T *> WidgetsFactory<T>::create(const QString &&nameObject, QWidget *parent, bool checkable, const QPixmap &&icon)
 {
     Q_UNUSED(nameObject);
     Q_UNUSED(parent);
@@ -11,7 +11,7 @@ std::optional<T *> ToolbarElementsFactory<T>::create(const QString &&nameObject,
 }
 
 template<>
-std::optional<QAction *> ToolbarElementsFactory<QAction>::create(const QString &&nameObject, QWidget *parent, bool checkable, const QPixmap &&icon)
+std::optional<QAction *> WidgetsFactory<QAction>::create(const QString &&nameObject, QWidget *parent, bool checkable, const QPixmap &&icon)
 {
     auto t = new QAction(parent);
     if(!t) return std::nullopt;
@@ -22,7 +22,7 @@ std::optional<QAction *> ToolbarElementsFactory<QAction>::create(const QString &
 }
 
 template<>
-std::optional<QMenu *> ToolbarElementsFactory<QMenu>::create(const QString &&nameObject, QWidget *parent, bool checkable, const QPixmap &&icon)
+std::optional<QMenu *> WidgetsFactory<QMenu>::create(const QString &&nameObject, QWidget *parent, bool checkable, const QPixmap &&icon)
 {
     Q_UNUSED(checkable);
     auto t = new QMenu(parent);
@@ -33,7 +33,7 @@ std::optional<QMenu *> ToolbarElementsFactory<QMenu>::create(const QString &&nam
 }
 
 template<>
-std::optional<QToolButton *> ToolbarElementsFactory<QToolButton>::create(const QString &&nameObject, QWidget *parent, bool checkable, const QPixmap &&icon)
+std::optional<QToolButton *> WidgetsFactory<QToolButton>::create(const QString &&nameObject, QWidget *parent, bool checkable, const QPixmap &&icon)
 {
     Q_UNUSED(checkable);
     auto t = new QToolButton(parent);
@@ -44,7 +44,7 @@ std::optional<QToolButton *> ToolbarElementsFactory<QToolButton>::create(const Q
 }
 
 template<>
-std::optional<QComboBox *> ToolbarElementsFactory<QComboBox>::create(const QString &&nameObject, QWidget *parent, bool checkable, const QPixmap &&icon)
+std::optional<QComboBox *> WidgetsFactory<QComboBox>::create(const QString &&nameObject, QWidget *parent, bool checkable, const QPixmap &&icon)
 {
     Q_UNUSED(checkable);
     Q_UNUSED(icon);
@@ -55,7 +55,7 @@ std::optional<QComboBox *> ToolbarElementsFactory<QComboBox>::create(const QStri
 }
 
 template<>
-std::optional<QPushButton *> ToolbarElementsFactory<QPushButton>::create(const QString &&nameObject, QWidget *parent, bool checkable, const QPixmap &&icon)
+std::optional<QPushButton *> WidgetsFactory<QPushButton>::create(const QString &&nameObject, QWidget *parent, bool checkable, const QPixmap &&icon)
 {
     Q_UNUSED(checkable);
     Q_UNUSED(icon);
@@ -66,7 +66,7 @@ std::optional<QPushButton *> ToolbarElementsFactory<QPushButton>::create(const Q
 }
 
 template<class T>
-void ToolbarElementsFactory<T>::setText(QObject *parent, const QString &&nameObject,const QString &&text)
+void WidgetsFactory<T>::setText(QObject *parent, const QString &&nameObject,const QString &&text)
 {
     Q_UNUSED(parent);
     Q_UNUSED(nameObject);
@@ -74,7 +74,7 @@ void ToolbarElementsFactory<T>::setText(QObject *parent, const QString &&nameObj
 }
 
 template<>
-void ToolbarElementsFactory<QAction>::setText(QObject* parent,const QString&& nameObject,const QString&& text)
+void WidgetsFactory<QAction>::setText(QObject* parent,const QString&& nameObject,const QString&& text)
 {
     Q_ASSERT(parent != nullptr);
     auto act = parent->findChild<QAction*>(nameObject);
@@ -82,7 +82,7 @@ void ToolbarElementsFactory<QAction>::setText(QObject* parent,const QString&& na
 }
 
 template<>
-void ToolbarElementsFactory<QMenu>::setText(QObject* parent,const QString&& nameObject,const QString&& text)
+void WidgetsFactory<QMenu>::setText(QObject* parent,const QString&& nameObject,const QString&& text)
 {
     Q_ASSERT(parent != nullptr);
     auto menu = parent->findChild<QMenu*>(nameObject);
@@ -90,7 +90,7 @@ void ToolbarElementsFactory<QMenu>::setText(QObject* parent,const QString&& name
 }
 
 template<>
-void ToolbarElementsFactory<QComboBox>::setText(QObject* parent,const QString&& nameObject,const QString&& text)
+void WidgetsFactory<QComboBox>::setText(QObject* parent,const QString&& nameObject,const QString&& text)
 {
     Q_ASSERT(parent != nullptr);
     auto combo = parent->findChild<QComboBox*>(nameObject);
@@ -98,7 +98,7 @@ void ToolbarElementsFactory<QComboBox>::setText(QObject* parent,const QString&& 
 }
 
 template<>
-void ToolbarElementsFactory<QToolButton>::setText(QObject* parent,const QString&& nameObject,const QString&& text)
+void WidgetsFactory<QToolButton>::setText(QObject* parent,const QString&& nameObject,const QString&& text)
 {
     Q_ASSERT(parent != nullptr);
     auto toolButton = parent->findChild<QToolButton*>(nameObject);
@@ -106,7 +106,7 @@ void ToolbarElementsFactory<QToolButton>::setText(QObject* parent,const QString&
 }
 
 template<>
-void ToolbarElementsFactory<QPushButton>::setText(QObject* parent,const QString&& nameObject,const QString&& text)
+void WidgetsFactory<QPushButton>::setText(QObject* parent,const QString&& nameObject,const QString&& text)
 {
     Q_ASSERT(parent != nullptr);
     auto pushButton = parent->findChild<QPushButton*>(nameObject);
@@ -114,7 +114,7 @@ void ToolbarElementsFactory<QPushButton>::setText(QObject* parent,const QString&
 }
 
 template<class T>
-void ToolbarElementsFactory<T>::setChecked(QObject* parent,const QString&& nameObject, const bool b)
+void WidgetsFactory<T>::setChecked(QObject* parent,const QString&& nameObject, const bool b)
 {
     Q_UNUSED(parent);
     Q_UNUSED(nameObject);
@@ -122,7 +122,7 @@ void ToolbarElementsFactory<T>::setChecked(QObject* parent,const QString&& nameO
 }
 
 template<>
-void ToolbarElementsFactory<QAction>::setChecked(QObject* parent,const QString&& nameObject, const bool b)
+void WidgetsFactory<QAction>::setChecked(QObject* parent,const QString&& nameObject, const bool b)
 {
     Q_ASSERT(parent != nullptr);
     auto act = parent->findChild<QAction*>(nameObject);
@@ -130,7 +130,7 @@ void ToolbarElementsFactory<QAction>::setChecked(QObject* parent,const QString&&
 }
 
 template<class T>
-bool ToolbarElementsFactory<T>::isChecked(QObject* parent,const QString&& nameObject)
+bool WidgetsFactory<T>::isChecked(QObject* parent,const QString&& nameObject)
 {
     Q_UNUSED(parent);
     Q_UNUSED(nameObject);
@@ -138,7 +138,7 @@ bool ToolbarElementsFactory<T>::isChecked(QObject* parent,const QString&& nameOb
 }
 
 template<>
-bool ToolbarElementsFactory<QAction>::isChecked(QObject* parent,const QString&& nameObject)
+bool WidgetsFactory<QAction>::isChecked(QObject* parent,const QString&& nameObject)
 {
     Q_ASSERT(parent != nullptr);
     auto act = parent->findChild<QAction*>(nameObject);

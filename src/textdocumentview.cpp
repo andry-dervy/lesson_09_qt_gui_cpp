@@ -75,11 +75,6 @@ void TextDocumentView::print(QPrinter* printer) const
     textEdit->print(printer);
 }
 
-//std::unique_ptr<CreatorDocumentView> TextDocumentView::getCreator() const
-//{
-//    return std::make_unique<CreatorTextDocumentView>();
-//}
-
 bool TextDocumentView::eventFilter(QObject *obj, QEvent *event)
 {
     switch(event->type())

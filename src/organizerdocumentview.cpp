@@ -222,6 +222,10 @@ bool OrganizerDocumentView::openDocument(QFile &file, ReadableWritable rw)
     }
 
     qDebug() << "openDocument return true";
+
+    fileName = file.fileName();
+    setWindowTitle(fileName.section('/',-1));
+
     return true;
 }
 
@@ -255,6 +259,9 @@ bool OrganizerDocumentView::saveDocument(QFile &file)
 
     xmlWriter.writeEndElement(); // numbertasks
     xmlWriter.writeEndDocument();
+
+    fileName = file.fileName();
+    setWindowTitle(fileName.section('/',-1));
 
     return true;
 }

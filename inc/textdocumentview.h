@@ -15,8 +15,7 @@ public:
     void print(QPrinter* printer) const override;
     bool isTypeDoc(TypeDocumentView type) const override {return type == TypeDocumentView::TextDocumentView ? true: false;}
     QString getExtention() const override {return extention();}
-    static QString extention() {return ".htxt";}
-//    std::unique_ptr<CreatorDocumentView> getCreator() const override;
+    static QString extention() {return "htxt";}
 private:
     TextDocumentView& operator=(const TextDocumentView&) = delete;
     TextDocumentView(TextDocumentView&& root) = delete;

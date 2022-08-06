@@ -10,11 +10,11 @@
 #include <QPushButton>
 
 template<class T>
-class ToolbarElementsFactory
+class WidgetsFactory
 {
 public:
-    ToolbarElementsFactory() = default;
-    virtual ~ToolbarElementsFactory() = default;
+    WidgetsFactory() = default;
+    virtual ~WidgetsFactory() = default;
 public:
     static std::optional<T *> create(
             const QString&& nameObject, QWidget *parent = nullptr, bool checkable = false, const QPixmap&& icon = QPixmap());

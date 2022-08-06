@@ -2,8 +2,8 @@
 #include "inc/toolbarelementsfactory.h"
 #include "QDebug"
 
-extern template void ToolbarElementsFactory<QAction>::setText(QObject* obj,const QString&& nameObject,const QString&& text);
-extern template std::optional<QAction *> ToolbarElementsFactory<QAction>::create(const QString &&nameObject, QWidget *parent, bool checkable, const QPixmap &&icon);
+extern template void WidgetsFactory<QAction>::setText(QObject* obj,const QString&& nameObject,const QString&& text);
+extern template std::optional<QAction *> WidgetsFactory<QAction>::create(const QString &&nameObject, QWidget *parent, bool checkable, const QPixmap &&icon);
 
 TextFormateToolBarSingleton* TextFormateToolBarSingleton::getInstance(MainWindow* parent)
 {
@@ -14,70 +14,70 @@ TextFormateToolBarSingleton* TextFormateToolBarSingleton::getInstance(MainWindow
 
 void TextFormateToolBarSingleton::retranslate()
 {
-    ToolbarElementsFactory<QAction>::setText(this,"actTextFormateLeft",tr("Выровнять влево"));
-    ToolbarElementsFactory<QAction>::setText(this,"actTextFormateCenter",tr("По центру"));
-    ToolbarElementsFactory<QAction>::setText(this,"actTextFormateRight",tr("Выровнять вправо"));
-    ToolbarElementsFactory<QAction>::setText(this,"actTextFormateWidth",tr("По ширине"));
-    ToolbarElementsFactory<QAction>::setText(this,"actTextFont",tr("Шрифт"));
-    ToolbarElementsFactory<QAction>::setText(this,"actColorFont",tr("Цвет шрифта"));
-    ToolbarElementsFactory<QAction>::setText(this,"actColorBackground",tr("Цвет фона"));
-    ToolbarElementsFactory<QAction>::setText(this,"actClearFormat",tr("Очистка формата"));
-    ToolbarElementsFactory<QAction>::setText(this,"actCopyFormat",tr("Копировать формат"));
+    WidgetsFactory<QAction>::setText(this,"actTextFormateLeft",tr("Выровнять влево"));
+    WidgetsFactory<QAction>::setText(this,"actTextFormateCenter",tr("По центру"));
+    WidgetsFactory<QAction>::setText(this,"actTextFormateRight",tr("Выровнять вправо"));
+    WidgetsFactory<QAction>::setText(this,"actTextFormateWidth",tr("По ширине"));
+    WidgetsFactory<QAction>::setText(this,"actTextFont",tr("Шрифт"));
+    WidgetsFactory<QAction>::setText(this,"actColorFont",tr("Цвет шрифта"));
+    WidgetsFactory<QAction>::setText(this,"actColorBackground",tr("Цвет фона"));
+    WidgetsFactory<QAction>::setText(this,"actClearFormat",tr("Очистка формата"));
+    WidgetsFactory<QAction>::setText(this,"actCopyFormat",tr("Копировать формат"));
 }
 
 TextFormateToolBarSingleton::TextFormateToolBarSingleton(MainWindow* parent)
     : QToolBar(parent)
     , added(false)
 {
-    auto act = ToolbarElementsFactory<QAction>::create(
+    auto act = WidgetsFactory<QAction>::create(
                 "actTextFormateLeft", this,true,QPixmap(":/icons/textformate/left.png"));
     Q_ASSERT(act != nullptr);
     connect(*act,SIGNAL(triggered()),this,SLOT(textFormateLeft()));
     addAction(*act);
 
-    act = ToolbarElementsFactory<QAction>::create(
+    act = WidgetsFactory<QAction>::create(
                 "actTextFormateCenter", this,true,QPixmap(":/icons/textformate/center.png"));
     Q_ASSERT(act != nullptr);
     connect(*act,SIGNAL(triggered()),this,SLOT(textFormateCenter()));
     addAction(*act);
 
-    act = ToolbarElementsFactory<QAction>::create(
+    act = WidgetsFactory<QAction>::create(
                 "actTextFormateRight", this,true,QPixmap(":/icons/textformate/right.png"));
     Q_ASSERT(act != nullptr);
     connect(*act,SIGNAL(triggered()),this,SLOT(textFormateRight()));
     addAction(*act);
 
-    act = ToolbarElementsFactory<QAction>::create(
+    act = WidgetsFactory<QAction>::create(
                 "actTextFormateWidth", this,true,QPixmap(":/icons/textformate/width.png"));
     Q_ASSERT(act != nullptr);
     connect(*act,SIGNAL(triggered()),this,SLOT(textFormateWidth()));
     addAction(*act);
 
-    act = ToolbarElementsFactory<QAction>::create(
+    act = WidgetsFactory<QAction>::create(
                 "actTextFont", this,false,QPixmap(":/icons/textformate/font.png"));
     Q_ASSERT(act != nullptr);
     connect(*act,SIGNAL(triggered()),this,SLOT(textFont()));
     addAction(*act);
 
-    act = ToolbarElementsFactory<QAction>::create(
+    act = WidgetsFactory<QAction>::create(
                 "actColorFont", this,false,QPixmap(":/icons/textformate/colorfont.png"));
     Q_ASSERT(act != nullptr);
     connect(*act,SIGNAL(triggered()),this,SLOT(textColorFont()));
     addAction(*act);
 
-    act = ToolbarElementsFactory<QAction>::create(
+    act = WidgetsFactory<QAction>::create(
                 "actColorBackground", this,false,QPixmap(":/icons/textformate/colorbackground.png"));
     Q_ASSERT(act != nullptr);
     connect(*act,SIGNAL(triggered()),this,SLOT(textColorBackground()));
     addAction(*act);
 
-    act = ToolbarElementsFactory<QAction>::create(
+    act = WidgetsFactory<QAction>::create(
                 "actClearFormat", this,false,QPixmap(":/icons/textformate/clear.png"));
     Q_ASSERT(act != nullptr);
     connect(*act,SIGNAL(triggered()),this,SLOT(textClearFormat()));
     addAction(*act);
 
-    act = ToolbarElementsFactory<QAction>::create(
+    act = WidgetsFactory<QAction>::create(
                 "actCopyFormat", this,true,QPixmap(":/icons/textformate/copyformat.png"));
     Q_ASSERT(act != nullptr);
     connect(*act,SIGNAL(triggered()),this,SLOT(textCopyFormat()));
@@ -88,28 +88,28 @@ TextFormateToolBarSingleton::TextFormateToolBarSingleton(MainWindow* parent)
 
 void TextFormateToolBarSingleton::setActionsChecked(Qt::Alignment alignment)
 {
-    ToolbarElementsFactory<QAction>::setChecked(this,"actTextFormateLeft",false);
-    ToolbarElementsFactory<QAction>::setChecked(this,"actTextFormateCenter",false);
-    ToolbarElementsFactory<QAction>::setChecked(this,"actTextFormateRight",false);
-    ToolbarElementsFactory<QAction>::setChecked(this,"actTextFormateWidth",false);
+    WidgetsFactory<QAction>::setChecked(this,"actTextFormateLeft",false);
+    WidgetsFactory<QAction>::setChecked(this,"actTextFormateCenter",false);
+    WidgetsFactory<QAction>::setChecked(this,"actTextFormateRight",false);
+    WidgetsFactory<QAction>::setChecked(this,"actTextFormateWidth",false);
 
     qDebug() << "setActionsChecked(" << alignment <<")";
 
     switch (alignment) {
     case Qt::AlignLeft:
-        ToolbarElementsFactory<QAction>::setChecked(this,"actTextFormateLeft",true);
+        WidgetsFactory<QAction>::setChecked(this,"actTextFormateLeft",true);
         break;
     case Qt::AlignHCenter:
     case Qt::AlignVCenter:
     case Qt::AlignCenter:
-        ToolbarElementsFactory<QAction>::setChecked(this,"actTextFormateCenter",true);
+        WidgetsFactory<QAction>::setChecked(this,"actTextFormateCenter",true);
         break;
     case Qt::AlignRight:
     case Qt::AlignTrailing|Qt::AlignAbsolute:
-        ToolbarElementsFactory<QAction>::setChecked(this,"actTextFormateRight",true);
+        WidgetsFactory<QAction>::setChecked(this,"actTextFormateRight",true);
         break;
     case Qt::AlignJustify:
-        ToolbarElementsFactory<QAction>::setChecked(this,"actTextFormateWidth",true);
+        WidgetsFactory<QAction>::setChecked(this,"actTextFormateWidth",true);
         break;
     }
 }

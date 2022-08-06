@@ -1,141 +1,153 @@
-#include "inc/mainwindow.h"
 #include "ui_mainwindow.h"
 #include "QFileDialog"
 #include "QTextStream"
 #include "QDockWidget"
 #include "QMdiSubWindow"
-#include "inc/languagevisitor.h"
 #include "QPrinter"
 #include "QToolButton"
+#include "QSettings"
+
+#include "inc/mainwindow.h"
+#include "inc/languagevisitor.h"
 #include "inc/textformatetoolbarsingleton.h"
 #include "inc/drawgraphtoolbarsingleton.h"
 #include "inc/toolbarelementsfactory.h"
 #include "inc/organizerdocumentview.h"
 
-extern template void ToolbarElementsFactory<QAction>::setText(QObject* obj,const QString&& nameObject,const QString&& text);
-extern template void ToolbarElementsFactory<QMenu>::setText(QObject* obj,const QString&& nameObject,const QString&& text);
-extern template std::optional<QAction *> ToolbarElementsFactory<QAction>::create(const QString &&nameObject, QWidget *parent, bool checkable, const QPixmap &&icon);
-extern template std::optional<QMenu *> ToolbarElementsFactory<QMenu>::create(const QString &&nameObject, QWidget *parent, bool checkable, const QPixmap &&icon);
-extern template std::optional<QToolButton *> ToolbarElementsFactory<QToolButton>::create(const QString &&nameObject, QWidget *parent, bool checkable, const QPixmap &&icon);
-extern template void ToolbarElementsFactory<QToolButton>::setText(QObject* obj,const QString&& nameObject,const QString&& text);
+extern template void WidgetsFactory<QAction>::setText(QObject* obj,const QString&& nameObject,const QString&& text);
+extern template void WidgetsFactory<QMenu>::setText(QObject* obj,const QString&& nameObject,const QString&& text);
+extern template std::optional<QAction *> WidgetsFactory<QAction>::create(const QString &&nameObject, QWidget *parent, bool checkable, const QPixmap &&icon);
+extern template std::optional<QMenu *> WidgetsFactory<QMenu>::create(const QString &&nameObject, QWidget *parent, bool checkable, const QPixmap &&icon);
+extern template std::optional<QToolButton *> WidgetsFactory<QToolButton>::create(const QString &&nameObject, QWidget *parent, bool checkable, const QPixmap &&icon);
+extern template void WidgetsFactory<QToolButton>::setText(QObject* obj,const QString&& nameObject,const QString&& text);
 
 void MainWindow::setMenuFile()
 {
-    auto menuFile = ToolbarElementsFactory<QMenu>::create("menuFile",this);
+    auto menuFile = WidgetsFactory<QMenu>::create("menuFile",this);
     Q_ASSERT(menuFile != nullptr);
     ui->menubar->addMenu(*menuFile);
-    auto menuNewFile = ToolbarElementsFactory<QMenu>::create("menuNewFile",this);
+    auto menuNewFile = WidgetsFactory<QMenu>::create("menuNewFile",this);
     Q_ASSERT(menuFile != nullptr);
     (*menuFile)->addMenu(*menuNewFile);
 
-    auto act = ToolbarElementsFactory<QAction>::create("actNewTextFile",this);
+    auto act = WidgetsFactory<QAction>::create("actNewTextFile",this);
     Q_ASSERT(act != nullptr);
     (*menuNewFile)->addAction(*act);
     connect(*act, &QAction::triggered, this, &MainWindow::newTextFile);
-    act = ToolbarElementsFactory<QAction>::create("actNewGraphFile",this);
+    act = WidgetsFactory<QAction>::create("actNewGraphFile",this);
     Q_ASSERT(act != nullptr);
     (*menuNewFile)->addAction(*act);
     connect(*act, &QAction::triggered, this, &MainWindow::newGraphFile);
-    act = ToolbarElementsFactory<QAction>::create("actNewOrganizerFile",this);
+    act = WidgetsFactory<QAction>::create("actNewOrganizerFile",this);
     Q_ASSERT(act != nullptr);
     (*menuNewFile)->addAction(*act);
     connect(*act, &QAction::triggered, this, &MainWindow::newOrganizerFile);
 
-    act = ToolbarElementsFactory<QAction>::create("actOpen",this);
+    act = WidgetsFactory<QAction>::create("actOpen",this);
     Q_ASSERT(act != nullptr);
     (*menuFile)->addAction(*act);
     connect(*act, &QAction::triggered, this, &MainWindow::openFile);
-    act = ToolbarElementsFactory<QAction>::create("actOpenReadableOnly",this);
+    act = WidgetsFactory<QAction>::create("actOpenReadableOnly",this);
     Q_ASSERT(act != nullptr);
     (*menuFile)->addAction(*act);
     connect(*act, &QAction::triggered, this, &MainWindow::openFileReadableOnly);
 
-    act = ToolbarElementsFactory<QAction>::create("actSave",this);
+    act = WidgetsFactory<QAction>::create("actSave",this);
     Q_ASSERT(act != nullptr);
     (*menuFile)->addAction(*act);
     connect(*act, &QAction::triggered, this, &MainWindow::saveFile);
-    act = ToolbarElementsFactory<QAction>::create("actSaveAs",this);
+    act = WidgetsFactory<QAction>::create("actSaveAs",this);
     Q_ASSERT(act != nullptr);
     (*menuFile)->addAction(*act);
     connect(*act, &QAction::triggered, this, &MainWindow::saveFileAs);
+    act = WidgetsFactory<QAction>::create("actSaveAll",this);
+    Q_ASSERT(act != nullptr);
+    (*menuFile)->addAction(*act);
+    connect(*act, &QAction::triggered, this, &MainWindow::saveFileAll);
 
-    act = ToolbarElementsFactory<QAction>::create("actPrint",this);
+    act = WidgetsFactory<QAction>::create("actPrint",this);
     Q_ASSERT(act != nullptr);
     (*menuFile)->addAction(*act);
     connect(*act, &QAction::triggered, this, &MainWindow::printFile);
 }
-
 void MainWindow::setMenuView()
 {
-    auto menuView = ToolbarElementsFactory<QMenu>::create("menuView",this);
+    auto menuView = WidgetsFactory<QMenu>::create("menuView",this);
     Q_ASSERT(menuView != nullptr);
     ui->menubar->addMenu(*menuView);
-    auto act = ToolbarElementsFactory<QAction>::create("actViewTreeDirs",this,true);
+    auto act = WidgetsFactory<QAction>::create("actViewTreeDirs",this,true);
     Q_ASSERT(act != nullptr);
     (*act)->setChecked(false);
     (*menuView)->addAction(*act);
     connect(*act, &QAction::triggered, this, &MainWindow::viewTreeDirs);
-    act = ToolbarElementsFactory<QAction>::create("actViewToolBarTextFormat",this,true);
+    act = WidgetsFactory<QAction>::create("actViewToolBarTextFormat",this,true);
     Q_ASSERT(act != nullptr);
     (*act)->setChecked(false);
     (*menuView)->addAction(*act);
     connect(*act, &QAction::triggered, this, &MainWindow::viewToolBarTextFormat);
-    act = ToolbarElementsFactory<QAction>::create("actViewToolBarDrawing",this,true);
+    act = WidgetsFactory<QAction>::create("actViewToolBarDrawing",this,true);
     Q_ASSERT(act != nullptr);
     (*act)->setChecked(false);
     (*menuView)->addAction(*act);
     connect(*act, &QAction::triggered, this, &MainWindow::viewToolBarDrawing);
 }
-
 void MainWindow::setMenuSettings()
 {
-    auto menuSettings = ToolbarElementsFactory<QMenu>::create("menuSettings",this);
+    auto menuSettings = WidgetsFactory<QMenu>::create("menuSettings",this);
     Q_ASSERT(menuSettings != nullptr);
     ui->menubar->addMenu(*menuSettings);
-    auto act = ToolbarElementsFactory<QAction>::create("actAssignKeyboardShortcuts",this);
+    auto act = WidgetsFactory<QAction>::create("actAssignKeyboardShortcuts",this);
     Q_ASSERT(act != nullptr);
     (*menuSettings)->addAction(*act);
     connect(*act, &QAction::triggered, this, &MainWindow::assignKeyboardShortcuts);
 
-    auto menuTheme = ToolbarElementsFactory<QMenu>::create("menuTheme",this);
+    auto menuTheme = WidgetsFactory<QMenu>::create("menuTheme",this);
     Q_ASSERT(menuTheme != nullptr);
     (*menuSettings)->addMenu(*menuTheme);
-    act = ToolbarElementsFactory<QAction>::create("actThemeMailSy",this);
+    act = WidgetsFactory<QAction>::create("actThemeMailSy",this);
     Q_ASSERT(act != nullptr);
     (*menuTheme)->addAction(*act);
     connect(*act, &QAction::triggered, this, &MainWindow::setThemeMailSy);
-    act = ToolbarElementsFactory<QAction>::create("actThemeIntegrid",this);
+    act = WidgetsFactory<QAction>::create("actThemeIntegrid",this);
     Q_ASSERT(act != nullptr);
     (*menuTheme)->addAction(*act);
     connect(*act, &QAction::triggered, this, &MainWindow::setThemeIntegrid);
-}
 
+    (*menuSettings)->addSeparator();
+
+    act = WidgetsFactory<QAction>::create("actOpenFileOrganizer",this,true);
+    Q_ASSERT(act != nullptr);
+    (*menuSettings)->addAction(*act);
+    connect(*act, &QAction::triggered, this, &MainWindow::openFileOrganizerDefault);
+    act = WidgetsFactory<QAction>::create("actSetCurrentFileOrganizerAsDefault",this);
+    Q_ASSERT(act != nullptr);
+    (*menuSettings)->addAction(*act);
+    connect(*act, &QAction::triggered, this, &MainWindow::setCurrentFileOrganizerAsDefault);
+}
 void MainWindow::setMenuLanguage()
 {
-    auto menuLanguage = ToolbarElementsFactory<QMenu>::create("menuLanguage",this);
+    auto menuLanguage = WidgetsFactory<QMenu>::create("menuLanguage",this);
     Q_ASSERT(menuLanguage != nullptr);
     ui->menubar->addMenu(*menuLanguage);
-    auto act = ToolbarElementsFactory<QAction>::create("actRussian",this,true);
+    auto act = WidgetsFactory<QAction>::create("actRussian",this,true);
     Q_ASSERT(act != nullptr);
     (*menuLanguage)->addAction(*act);
     connect(*act, &QAction::triggered, this, &MainWindow::setRussianLanguage);
-    act = ToolbarElementsFactory<QAction>::create("actEnglish",this,true);
+    act = WidgetsFactory<QAction>::create("actEnglish",this,true);
     Q_ASSERT(act != nullptr);
     (*menuLanguage)->addAction(*act);
     connect(*act, &QAction::triggered, this, &MainWindow::setEnglishLanguage);
 }
-
 void MainWindow::setMenuHelp()
 {
-    auto menuHelp = ToolbarElementsFactory<QMenu>::create("menuHelp",this);
+    auto menuHelp = WidgetsFactory<QMenu>::create("menuHelp",this);
     Q_ASSERT(menuHelp != nullptr);
     ui->menubar->addMenu(*menuHelp);
-    auto act = ToolbarElementsFactory<QAction>::create("actCallingHelp",this);
+    auto act = WidgetsFactory<QAction>::create("actCallingHelp",this);
     Q_ASSERT(act != nullptr);
     (*menuHelp)->addAction(*act);
     connect(*act, &QAction::triggered, this, &MainWindow::callingHelp);
 }
-
 void MainWindow::setMenu()
 {
     setMenuFile();
@@ -153,7 +165,7 @@ void MainWindow::setToolBar()
     Q_ASSERT(toptb != nullptr);
     addToolBar(Qt::TopToolBarArea,toptb);
 
-    auto tb_newFile = ToolbarElementsFactory<QToolButton>::create("menuHelp",this,false,QPixmap(":/icons/new.png"));
+    auto tb_newFile = WidgetsFactory<QToolButton>::create("menuHelp",this,false,QPixmap(":/icons/new.png"));
     Q_ASSERT(tb_newFile != nullptr);
     (*tb_newFile)->setPopupMode(QToolButton::MenuButtonPopup);
     toptb->addWidget(*tb_newFile);
@@ -162,22 +174,22 @@ void MainWindow::setToolBar()
     Q_ASSERT(menuNewFile != nullptr);
     (*tb_newFile)->setMenu(menuNewFile);
 
-    auto act = ToolbarElementsFactory<QAction>::create("toolBarOpenFile",this,false,QPixmap(":/icons/open.png"));
+    auto act = WidgetsFactory<QAction>::create("toolBarOpenFile",this,false,QPixmap(":/icons/open.png"));
     Q_ASSERT(act != nullptr);
     toptb->addAction(*act);
     connect(*act, &QAction::triggered, this, &MainWindow::openFile);
-    act = ToolbarElementsFactory<QAction>::create("toolBarSaveFile",this,false,QPixmap(":/icons/save.png"));
+    act = WidgetsFactory<QAction>::create("toolBarSaveFile",this,false,QPixmap(":/icons/save.png"));
     Q_ASSERT(act != nullptr);
     toptb->addAction(*act);
     connect(*act, &QAction::triggered, this, &MainWindow::saveFile);
-    act = ToolbarElementsFactory<QAction>::create("toolBarPrintFile",this,false,QPixmap(":/icons/print.png"));
+    act = WidgetsFactory<QAction>::create("toolBarPrintFile",this,false,QPixmap(":/icons/print.png"));
     Q_ASSERT(act != nullptr);
     toptb->addAction(*act);
     connect(*act, &QAction::triggered, this, &MainWindow::printFile);
 
     toptb->addSeparator();
 
-    act = ToolbarElementsFactory<QAction>::create("changeReadableWritable",this,false,QPixmap(":/icons/print.png"));
+    act = WidgetsFactory<QAction>::create("changeReadableWritable",this,false,QPixmap(":/icons/print.png"));
     Q_ASSERT(act != nullptr);
     changeReadableWritable = *act;
     toptb->addAction(*act);
@@ -195,6 +207,29 @@ void MainWindow::setToolBar()
     DrawGraphToolBarSingleton::getInstance(this)->setVisible(false);
     connect(this, &MainWindow::activatedDocumentView,
             DrawGraphToolBarSingleton::getInstance(this), &DrawGraphToolBarSingleton::activatedDocumentView);
+}
+
+void MainWindow::loadSettings()
+{
+    QSettings settings("app.ini", QSettings::IniFormat);
+    auto actOpenFileOrganizer = findChild<QAction*>("actOpenFileOrganizer");
+    if(actOpenFileOrganizer != nullptr)
+    {
+        actOpenFileOrganizer->setChecked(settings.value("OpenFileOrganizerIsChecked").toBool());
+        fileNameOrganizer = settings.value("FileNameOrganizer").toString();
+    }
+}
+
+void MainWindow::saveSettings()
+{
+    QSettings settings("app.ini", QSettings::IniFormat);
+
+    auto actOpenFileOrganizer = findChild<QAction*>("actOpenFileOrganizer");
+    if(actOpenFileOrganizer != nullptr)
+    {
+        settings.setValue("OpenFileOrganizerIsChecked", actOpenFileOrganizer->isChecked());
+        settings.setValue("FileNameOrganizer", fileNameOrganizer);
+    }
 }
 
 MainWindow::MainWindow(QWidget *parent)
@@ -232,10 +267,15 @@ MainWindow::MainWindow(QWidget *parent)
     mapCreators.insert(TextDocumentView::extention(),new CreatorTextDocumentView(this));
     mapCreators.insert(GraphDocumentView::extention(),new CreatorGraphDocumentView(this));
     mapCreators.insert(OrganizerDocumentView::extention(),new CreatorOrganizerDocumentView(this));
+
+    loadSettings();
+    openFileOrganizerDefault();
 }
 
 MainWindow::~MainWindow()
 {
+    saveFileAll();
+    saveSettings();
     delete ui;
 }
 
@@ -252,7 +292,6 @@ void MainWindow::addSubWindow(DocumentView* docView)
 
 void MainWindow::newTextFile()
 {
-    //CreatorTextDocumentView creatorTextDocView;
     auto creator = mapCreators.value(TextDocumentView::extention());
     DocumentView* docView = creator->newDocumentView(mdi);
     addSubWindow(docView);
@@ -261,14 +300,12 @@ void MainWindow::newTextFile()
 void MainWindow::newGraphFile()
 {
     auto creator = mapCreators.value(GraphDocumentView::extention());
-    //CreatorGraphDocumentView creatorGraphDocView;
     auto docView = creator->newDocumentView(mdi);
     addSubWindow(docView);
 }
 
 void MainWindow::newOrganizerFile()
 {
-    //CreatorOrganizerDocumentView creatorOrganizerDocumentView;
     auto creator = mapCreators.value(OrganizerDocumentView::extention());
     auto docView = creator->newDocumentView(mdi);
     addSubWindow(docView);
@@ -288,20 +325,14 @@ void MainWindow::openFilePath(QString& fileName, ReadableWritable aRW = Readable
         }
     }
 
-    for(auto it = mapCreators.begin(); it != mapCreators.end(); ++it)
-    {
-        int index = fileName.indexOf(it.key());
-        if(index == -1) continue;
+    QFileInfo fi(fileName);
+    QString ext = fi.suffix();
 
-//        auto creator = it.value()->openDocumentView(fileName,mdi,aRW);
-//        auto docView = creator->openDocumentView(fileName,mdi,aRW);
-        auto docView = it.value()->openDocumentView(fileName,mdi,aRW);
-        addSubWindow(docView);
-    }
+    if(mapCreators.find(ext) == mapCreators.end()) return;
 
-//    CreatorTextDocumentView creatorTextDocView;
-//    auto docView = creatorTextDocView.openDocumentView(fileName,mdi,aRW);
-//    addSubWindow(docView);
+    auto docView = mapCreators[ext]->openDocumentView(fileName,mdi,aRW);
+    addSubWindow(docView);
+    docView->setWindowState(Qt::WindowMaximized);
 }
 
 void MainWindow::openFile()
@@ -311,7 +342,7 @@ void MainWindow::openFile()
     QString ext;
     for(auto it = mapCreators.begin(); it != mapCreators.end(); ++it)
     {
-        ext += "*" + it.key() + ", ";
+        ext += "*." + it.key() + ", ";
     }
     ext.remove(ext.size()-2,2);
 
@@ -335,7 +366,32 @@ void MainWindow::openFileReadableOnly()
 
 void MainWindow::openFilePathFromFileSystemModel(QString& fileName)
 {
-    openFilePath(fileName, ReadableWritable::WRITABLE);
+    openFilePath(fileName);
+    pathDir = fileName;
+}
+
+void MainWindow::openFileOrganizerDefault()
+{
+    auto actOpenFileOrganizer = findChild<QAction*>("actOpenFileOrganizer");
+    if(actOpenFileOrganizer == nullptr) return;
+
+    if(actOpenFileOrganizer->isChecked() &&
+       !fileNameOrganizer.isEmpty()) {
+        openFilePath(fileNameOrganizer);
+    }
+}
+
+void MainWindow::setCurrentFileOrganizerAsDefault()
+{
+    auto optDocView = currentSubWindow();
+    if(!optDocView) return;
+    auto docView = *optDocView;
+    if(!docView->isTypeDoc(TypeDocumentView::OrganizerDocumentView)) return;
+
+    QString fileName = docView->getFileName();
+    if(fileName.isEmpty()) return;
+
+    fileNameOrganizer = fileName;
 }
 
 void MainWindow::saveFile()
@@ -352,14 +408,14 @@ void MainWindow::saveFile()
         const QString ext = docView->getExtention();
         fileName = fileDialog.getSaveFileName(this,
             tr("Сохранить файл"), pathDir,
-            tr("Файл") + "(*" + ext + ")");
+            tr("Файл") + "(*." + ext + ")");
 
         if(fileName.isEmpty()) return;
 
         int index = fileName.indexOf(ext);
         if(index == -1 || fileName.length() - ext.length() != index)
         {
-            fileName += ext;
+            fileName += "."+ext;
         }
     }
 
@@ -377,19 +433,32 @@ void MainWindow::saveFileAs()
 
     const QString ext = docView->getExtention();
     QString fileName = fileDialog.getSaveFileName(this,
-        tr("Сохранить файл"), pathDir,
-        tr("Файл") + "(" + ext + ")");
+        tr("Сохранить файл как"), pathDir,
+        tr("Файл") + "(." + ext + ")");
 
     if(fileName.isEmpty()) return;
 
     int index = fileName.indexOf(ext);
     if(index == -1 || fileName.length() - ext.length() != index)
     {
-        fileName += ext;
+        fileName += "."+ext;
     }
 
     auto creator = mapCreators.value(docView->getExtention());
     if(creator) creator->saveDocumentView(fileName,*docView);
+}
+
+void MainWindow::saveFileAll()
+{
+    auto wnds = mdi->subWindowList();
+    for(const auto& wnd: wnds)
+    {
+        auto docView = qobject_cast<DocumentView*>(wnd->widget());
+        if(docView == nullptr ||
+           docView->getFileName().isEmpty()) continue;
+        QString fileName = docView->getFileName();
+        mapCreators[docView->getExtention()]->saveDocumentView(fileName,*docView);
+    }
 }
 
 void MainWindow::printFile()
@@ -397,6 +466,8 @@ void MainWindow::printFile()
     auto optDocView = currentSubWindow();
     if(!optDocView) return;
     auto docView = *optDocView;
+
+    if(!docView->isTypeDoc(TypeDocumentView::TextDocumentView)) return;
 
     QPrinter printer;
     QPrintDialog dlg(&printer, this);
@@ -540,26 +611,28 @@ void MainWindow::closeDockTreeDirs()
 
 void MainWindow::retranslateMenuFile()
 {
-    ToolbarElementsFactory<QMenu>::setText(this,"menuFile",tr("&Файл"));
+    WidgetsFactory<QMenu>::setText(this,"menuFile",tr("&Файл"));
 
-    ToolbarElementsFactory<QMenu>::setText(this,"menuNewFile",tr("Новый файл"));
-    ToolbarElementsFactory<QAction>::setText(this,"actNewTextFile",tr("Новый текстовый файл"));
-    ToolbarElementsFactory<QAction>::setText(this,"actNewGraphFile",tr("Новый графический файл"));
-    ToolbarElementsFactory<QAction>::setText(this,"actNewOrganizerFile",tr("Новый файл органайзера"));
+    WidgetsFactory<QMenu>::setText(this,"menuNewFile",tr("Новый файл"));
+    WidgetsFactory<QAction>::setText(this,"actNewTextFile",tr("Новый текстовый файл"));
+    WidgetsFactory<QAction>::setText(this,"actNewGraphFile",tr("Новый графический файл"));
+    WidgetsFactory<QAction>::setText(this,"actNewOrganizerFile",tr("Новый файл органайзера"));
 
-    ToolbarElementsFactory<QAction>::setText(this,"actOpen",tr("Открыть файл"));
-    ToolbarElementsFactory<QAction>::setText(this,"actOpenReadableOnly",tr("Открыть файл только для чтения"));
+    WidgetsFactory<QAction>::setText(this,"actOpen",tr("Открыть файл"));
+    WidgetsFactory<QAction>::setText(this,"actOpenReadableOnly",tr("Открыть файл только для чтения"));
 
-    ToolbarElementsFactory<QAction>::setText(this,"actSave",tr("Сохранить файл"));
-    ToolbarElementsFactory<QAction>::setText(this,"actSaveAs",tr("Сохранить файл как"));
-    ToolbarElementsFactory<QAction>::setText(this,"actPrint",tr("Печатать..."));
+    WidgetsFactory<QAction>::setText(this,"actSave",tr("Сохранить файл"));
+    WidgetsFactory<QAction>::setText(this,"actSaveAs",tr("Сохранить файл как"));
+    WidgetsFactory<QAction>::setText(this,"actSaveAll",tr("Сохранить открытые файлы"));
 
-    ToolbarElementsFactory<QToolButton>::setText(this,"tb_newFile",tr("Новый файл"));
+    WidgetsFactory<QAction>::setText(this,"actPrint",tr("Печатать..."));
 
-    ToolbarElementsFactory<QAction>::setText(this,"toolBarOpenFile",tr("Открыть текстовый файл"));
-    ToolbarElementsFactory<QAction>::setText(this,"toolBarSaveFile",tr("Сохранить файл"));
-    ToolbarElementsFactory<QAction>::setText(this,"toolBarPrintFile",tr("Открыть текстовый файл"));
-    ToolbarElementsFactory<QAction>::setText(this,"toolBarOpenFile",tr("Печатать файл"));
+    WidgetsFactory<QToolButton>::setText(this,"tb_newFile",tr("Новый файл"));
+
+    WidgetsFactory<QAction>::setText(this,"toolBarOpenFile",tr("Открыть текстовый файл"));
+    WidgetsFactory<QAction>::setText(this,"toolBarSaveFile",tr("Сохранить файл"));
+    WidgetsFactory<QAction>::setText(this,"toolBarPrintFile",tr("Открыть текстовый файл"));
+    WidgetsFactory<QAction>::setText(this,"toolBarOpenFile",tr("Печатать файл"));
 
     setReadableWritable(rw);
 }
@@ -571,20 +644,24 @@ void MainWindow::retranslateMenuView()
     if(actViewTreeDirs != nullptr) actViewTreeDirs->setText(tr("Дерево каталогов"));
     auto actViewToolBarTextFormat = findChild<QAction*>("actViewToolBarTextFormat");
     if(actViewToolBarTextFormat != nullptr) actViewToolBarTextFormat->setText(tr("Формат текста"));
-    ToolbarElementsFactory<QAction>::setText(this,"actViewToolBarDrawing",tr("Рисование"));
+    WidgetsFactory<QAction>::setText(this,"actViewToolBarDrawing",tr("Рисование"));
 }
 void MainWindow::retranslateMenuSettings()
 {
     auto menuSettings = findChild<QMenu*>("menuSettings");
     if(menuSettings != nullptr) menuSettings->setTitle(tr("&Настройки"));
     auto actAssignKeyboardShortcuts = findChild<QAction*>("actAssignKeyboardShortcuts");
-    if(actAssignKeyboardShortcuts != nullptr) actAssignKeyboardShortcuts->setText(tr("Установка горячик клавиш"));
+    if(actAssignKeyboardShortcuts != nullptr) actAssignKeyboardShortcuts->setText(tr("&Установка горячик клавиш"));
     auto menuTheme = findChild<QMenu*>("menuTheme");
     if(menuTheme != nullptr) menuTheme->setTitle(tr("&Выбор темы"));
     auto actThemeMailSy = findChild<QAction*>("actThemeMailSy");
     if(actThemeMailSy != nullptr) actThemeMailSy->setText(tr("Тема MailSy"));
     auto actThemeIntegrid = findChild<QAction*>("actThemeIntegrid");
     if(actThemeIntegrid != nullptr) actThemeIntegrid->setText(tr("Тема Integrid"));
+    auto actOpenFileOrganizer = findChild<QAction*>("actOpenFileOrganizer");
+    if(actOpenFileOrganizer != nullptr) actOpenFileOrganizer->setText(tr("&Открывать файл органайзера при запуске приложения"));
+    auto actSetCurrentFileOrganizerAsDefault = findChild<QAction*>("actSetCurrentFileOrganizerAsDefault");
+    if(actSetCurrentFileOrganizerAsDefault != nullptr) actSetCurrentFileOrganizerAsDefault->setText(tr("Установить файл &органайзера по умолчанию"));
 }
 void MainWindow::retranslateMenuLanguage()
 {

@@ -5,7 +5,7 @@ import QtQuick.Controls 2.12
 Item {
     id: _root
     anchors.fill: parent
-    anchors.margins: 5
+    anchors.margins: 2
 
     property alias task_name: _txtNameTask.text
     property alias task_text: _txtTask.text
@@ -41,13 +41,20 @@ Item {
                     model_tasks.update_name_task(_view.currentIndex,_txtNameTask.text);
                 }
             }
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: (mouse)=> {
+                    _txtNameTask.forceActiveFocus(Qt.MouseFocusReason)
+                    _root.clicked();
+                }
+            }
         }
         Rectangle {
             id: _task
             color: "lightgoldenrodyellow"
             width: (_root.width - 10) * 0.50
             height: _root.height
-
 
             TextEdit {
                 id: _txtTask
@@ -66,7 +73,7 @@ Item {
                 wrapMode: TextEdit.Wrap
 
                 onTextChanged: {
-                    console.log("_txtTask: onTextChanged")
+                    console.log("_txtTask: onTextChanged");
                     var pos = _txtTask.positionAt(1, _txtTask.height + 1);
                     if(pos > 0 && _txtTask.length > pos)
                     {
@@ -75,6 +82,14 @@ Item {
                         console.log(_txtTask.text)
                     }
                     model_tasks.update_description_task(_view.currentIndex,_txtTask.text);
+                }
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: (mouse)=> {
+                    _txtTask.forceActiveFocus(Qt.MouseFocusReason)
+                    _root.clicked();
                 }
             }
         }
@@ -88,6 +103,7 @@ Item {
                 anchors.fill: parent
                 onClicked: _root.clicked();
                 onWheel: (wheel)=> {
+                    _root.clicked();
                     var delta = wheel.angleDelta.y;
                     console.log("_perform: onWheel " + delta)
                     model_tasks.update_progress_task(_view.currentIndex,delta);
@@ -119,7 +135,7 @@ Item {
                 anchors.fill: parent
                 onClicked: _root.clicked();
                 onWheel: (wheel)=> {
-                    _view.currentIndex = model.index
+                    _root.clicked();
 
                     var delta = wheel.angleDelta.y;
                     console.log("_limitDate: onWheel " + delta);

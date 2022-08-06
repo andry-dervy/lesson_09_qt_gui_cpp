@@ -53,7 +53,7 @@ public:
     bool isTypeDoc(TypeDocumentView type) const override {return type == TypeDocumentView::GraphDocumentView ? true: false;}
     TypeGraphElement getTypeGraphElement() const {return typeGraphElement;}
     QString getExtention() const override {return extention();}
-    static QString extention() {return ".graphics";}
+    static QString extention() {return "graphics";}
 private:
     GraphDocumentView& operator=(const GraphDocumentView&) = delete;
     GraphDocumentView(GraphDocumentView&& root) = delete;
